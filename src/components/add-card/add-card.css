@@ -1,0 +1,9 @@
+.add-card {
+  display: flex;
+  justify-content: end;
+}
+
+.add-card__button {
+  margin-right: 20px;
+  margin-top: 20px;
+}
