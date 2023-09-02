@@ -7,9 +7,13 @@ function Popup({ state, closePopup, createPost }) {
 
   function addNewPost(evt) {
     evt.preventDefault();
+
+    const date = new Date().toLocaleDateString();
     const newPost = {
+      id: Date.now(),
       title: inputName,
-      text: inputText
+      text: inputText,
+      createdAt: date
     };
 
     createPost(newPost);
