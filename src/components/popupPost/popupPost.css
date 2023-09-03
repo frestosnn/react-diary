@@ -1,0 +1,23 @@
+.popup__container_size_big {
+  min-width: 900px;
+  min-height: 500px;
+  align-items: center;
+}
+
+.popup__title_size_big {
+  margin: 20px 0 20px;
+}
+
+.popup__text {
+  margin: 0 0 20px;
+  padding: 10px 10px 10px 10px;
+}
+
+.popup__edit {
+  border-radius: 20px;
+  border: 1px solid gray;
+  text-transform: uppercase;
+  background-color: #d3d3d3;
+  height: 30px;
+  width: 200px;
+}

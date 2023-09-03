@@ -1,10 +1,11 @@
 import './App.css';
 import Header from '../header/Header.jsx';
 import Posts from '../posts/Posts.jsx';
-import AddCard from '../add-card/add-card.jsx';
+
 import Popup from '../popup/popup.jsx';
 import { useMemo, useState } from 'react';
 import Filter from '../filter/Filter';
+import PopupPost from '../popupPost/PopupPost';
 
 function App() {
   const storedPosts = localStorage.getItem('userPosts');
@@ -13,8 +14,11 @@ function App() {
   const [posts, setPosts] = useState(initialPosts);
 
   const [isOpen, setOpen] = useState(false);
+  const [isPopupPostOpen, setPopupPostOpen] = useState(false);
 
   const [filter, setFilter] = useState({ sort: '', query: '' });
+
+  const [selectedPost, setSelectedPost] = useState({});
 
   const sortedPosts = useMemo(() => {
     if (filter.sort) {
@@ -31,8 +35,14 @@ function App() {
     setOpen(true);
   }
 
+  function handlePopupPostOpen() {
+    setPopupPostOpen(true);
+  }
+
   function closePopup() {
     setOpen(false);
+    setPopupPostOpen(false);
+    setSelectedPost({});
   }
 
   function createPost(newPost) {
@@ -54,10 +64,16 @@ function App() {
   return (
     <>
       <Header />
-      <AddCard handlePopupOpen={handlePopupOpen} />
+      <Filter filter={filter} setFilter={setFilter} handlePopupOpen={handlePopupOpen} />
+      <Posts
+        posts={sortedAndSearchedPosts}
+        removePost={removePost}
+        handlePopupPostOpen={handlePopupPostOpen}
+        onButtonClick={setSelectedPost}
+      />
       <Popup state={isOpen} closePopup={closePopup} createPost={createPost}></Popup>
-      <Filter filter={filter} setFilter={setFilter} />
-      <Posts posts={sortedAndSearchedPosts} removePost={removePost} />
+
+      <PopupPost state={isPopupPostOpen} post={selectedPost} closePopup={closePopup}></PopupPost>
     </>
   );
 }

@@ -9,6 +9,7 @@ function Popup({ state, closePopup, createPost }) {
     evt.preventDefault();
 
     const date = new Date().toLocaleDateString();
+
     const newPost = {
       id: Date.now(),
       title: inputName,
@@ -16,23 +17,23 @@ function Popup({ state, closePopup, createPost }) {
       createdAt: date
     };
 
-    createPost(newPost);
-    setInputName('');
-    setInputText('');
-    closePopup();
+    if (inputName && inputText) {
+      createPost(newPost);
+      setInputName('');
+      setInputText('');
+      closePopup();
+    }
   }
 
   return (
     <div className={`popup ${state ? 'popup_opened' : ''}`}>
       <div className="popup__container">
-        <button className="popup__button-delete" onClick={closePopup}>
-          Закрыть
-        </button>
-        <form>
+        <button className="popup__button-delete" onClick={closePopup}></button>
+        <form className="popup__form">
           <h2 className="popup__title">Добавить новую запись</h2>
           <input
-            className="popup__input"
-            placeholder="Название статьи"
+            className="popup__input popup__input_type_title"
+            placeholder="Название записи"
             value={inputName}
             onChange={e => setInputName(e.target.value)}
           ></input>

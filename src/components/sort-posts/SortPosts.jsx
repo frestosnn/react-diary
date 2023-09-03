@@ -1,4 +1,5 @@
 import React from 'react';
+import './sort.css';
 
 function SortPosts({ options, value, onChange }) {
   return (

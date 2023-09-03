@@ -1,16 +1,23 @@
 .filter {
   display: flex;
-  flex-direction: column;
+  flex-direction: row;
+  justify-content: space-between;
   align-items: center;
-  gap: 20px;
+  margin: 0 10px 0 10px;
+}
+
+.filter__container {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
 }
 
 .filter__input {
-  width: 800px;
+  width: 500px;
 }
 
 .filter__select {
-  width: 800px;
+  width: 500px;
 }
 
 .sort__name {
