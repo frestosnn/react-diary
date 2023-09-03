@@ -26,10 +26,12 @@ function App() {
       return [...posts].sort((a, b) => a[filter.sort].localeCompare(b[filter.sort]));
     }
     return posts; // Вернуть исходный массив, если сортировка не выбрана
-  }, [filter.sort, posts, shouldUpdatePosts]);
+  }, [filter.sort, posts]);
 
   const sortedAndSearchedPosts = useMemo(() => {
-    return sortedPosts.filter(post => post.title.toLowerCase().includes(filter.query));
+    return sortedPosts.filter(
+      post => post && post.title && post.title.toLowerCase().includes(filter.query)
+    );
   }, [filter.query, sortedPosts]);
 
   function handlePopupOpen() {
@@ -38,10 +40,6 @@ function App() {
 
   function handlePopupPostOpen() {
     setPopupPostOpen(true);
-  }
-
-  function updatePost(newPost) {
-    setSelectedPost(newPost);
   }
 
   function closePopup() {
@@ -60,6 +58,21 @@ function App() {
 
   function removePost(card) {
     const updatedPosts = posts.filter(p => p.id !== card.id);
+    setPosts(updatedPosts);
+
+    // Обновление данных в LocalStorage
+    localStorage.setItem('userPosts', JSON.stringify(updatedPosts));
+  }
+
+  function updatePost(updatedPost) {
+    const updatedPosts = posts.map(post => {
+      if (post && post.id === updatedPost.id) {
+        return updatedPost; // Обновляем существующий пост
+      }
+      return post; // Остальные посты оставляем без изменений
+    });
+
+    setSelectedPost(updatedPost);
     setPosts(updatedPosts);
 
     // Обновление данных в LocalStorage
