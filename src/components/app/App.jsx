@@ -1,9 +1,8 @@
 import './App.css';
 import Header from '../header/Header.jsx';
 import Posts from '../posts/Posts.jsx';
-
 import Popup from '../popup/popup.jsx';
-import { useMemo, useState } from 'react';
+import { useMemo, useState, useEffect } from 'react';
 import Filter from '../filter/Filter';
 import PopupPost from '../popupPost/PopupPost';
 
@@ -20,12 +19,14 @@ function App() {
 
   const [selectedPost, setSelectedPost] = useState({});
 
+  const [shouldUpdatePosts, setShouldUpdatePosts] = useState(false);
+
   const sortedPosts = useMemo(() => {
     if (filter.sort) {
       return [...posts].sort((a, b) => a[filter.sort].localeCompare(b[filter.sort]));
     }
     return posts; // Вернуть исходный массив, если сортировка не выбрана
-  }, [filter.sort, posts]);
+  }, [filter.sort, posts, shouldUpdatePosts]);
 
   const sortedAndSearchedPosts = useMemo(() => {
     return sortedPosts.filter(post => post.title.toLowerCase().includes(filter.query));
@@ -37,6 +38,10 @@ function App() {
 
   function handlePopupPostOpen() {
     setPopupPostOpen(true);
+  }
+
+  function updatePost(newPost) {
+    setSelectedPost(newPost);
   }
 
   function closePopup() {
@@ -73,7 +78,13 @@ function App() {
       />
       <Popup state={isOpen} closePopup={closePopup} createPost={createPost}></Popup>
 
-      <PopupPost state={isPopupPostOpen} post={selectedPost} closePopup={closePopup}></PopupPost>
+      <PopupPost
+        state={isPopupPostOpen}
+        post={selectedPost}
+        closePopup={closePopup}
+        onUpdatePost={updatePost}
+        onEdit={setShouldUpdatePosts}
+      ></PopupPost>
     </>
   );
 }

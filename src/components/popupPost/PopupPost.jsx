@@ -1,10 +1,17 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import './popupPost.css';
 
-function PopupPost({ state, post, closePopup }) {
+function PopupPost({ state, post, closePopup, onUpdatePost, onEdit }) {
   const [isEditing, setEditing] = useState(false);
 
   const [editedPost, setEditedPost] = useState({ ...post });
+
+  // Инициализируем editedPost только при первом открытии режима редактирования
+  useEffect(() => {
+    if (isEditing) {
+      setEditedPost({ ...post });
+    }
+  }, [isEditing, post]);
 
   const handleEditClick = () => {
     setEditing(true);
@@ -13,10 +20,12 @@ function PopupPost({ state, post, closePopup }) {
   const handleSubmit = e => {
     e.preventDefault();
 
-    post.title = editedPost.title;
-    post.text = editedPost.text;
+    // Обновляем post с новыми данными из editedPost
+    const updatedPost = { ...post, title: editedPost.title, text: editedPost.text };
+    onUpdatePost(updatedPost); // Вызываем функцию onUpdatePost для обновления post
 
     setEditing(false);
+    onEdit(true);
   };
 
   return (
@@ -25,17 +34,22 @@ function PopupPost({ state, post, closePopup }) {
         <button className="popup__button-delete" onClick={closePopup}></button>
 
         {isEditing ? (
-          <div>
-            <form>
+          <div className="popup_post">
+            <form className="popup__form">
+              <h1 className="popup__title">Изменить пост:</h1>
               <input
-                value={editedPost.title}
+                className="popup__input popup__input_type_title"
+                value={editedPost.title || ''}
                 onChange={e => setEditedPost({ ...editedPost, title: e.target.value })}
               ></input>
-              <input
-                value={editedPost.text}
+              <textarea
+                className="popup__input"
+                value={editedPost.text || ''}
                 onChange={e => setEditedPost({ ...editedPost, text: e.target.value })}
-              ></input>
-              <button onClick={handleSubmit}>Сохранить</button>
+              ></textarea>
+              <button className="popup__button-save" onClick={handleSubmit}>
+                Сохранить
+              </button>
             </form>
           </div>
         ) : (
