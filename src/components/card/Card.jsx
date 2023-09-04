@@ -1,6 +1,7 @@
 import { useDispatch } from 'react-redux';
 import './card.css';
 import { useSelector } from 'react-redux';
+import { isPopupOpenPostOpenAction } from '../../store/popupOpenPost';
 
 function Card({ card, removePost, onButtonClick }) {
   const popupOpenPost = useSelector(state => state.popupOpenPost.isPopupOpenPost);
@@ -10,7 +11,7 @@ function Card({ card, removePost, onButtonClick }) {
   const date = card.createdAt;
 
   const setPostInfo = () => {
-    dispatch({ type: 'IS_OPEN', payload: {} });
+    dispatch(isPopupOpenPostOpenAction());
     onButtonClick(card);
   };
 

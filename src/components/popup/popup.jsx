@@ -1,6 +1,7 @@
 import './popup.css';
 import { useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
+import { isPopupAddClosedAction } from '../../store/popupReduser';
 
 function Popup({ createPost }) {
   const popup = useSelector(state => state.popupAddPost.isPopupAddPostOpen);
@@ -25,11 +26,12 @@ function Popup({ createPost }) {
       createPost(newPost);
       setInputName('');
       setInputText('');
+      handlePopupClose();
     }
   };
 
   const handlePopupClose = () => {
-    dispatch({ type: 'IS_CLOSED', payload: {} });
+    dispatch(isPopupAddClosedAction());
   };
 
   return (

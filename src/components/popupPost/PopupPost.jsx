@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import './popupPost.css';
 import { useDispatch, useSelector } from 'react-redux';
+import { isPopupOpenPostClosedAction } from '../../store/popupOpenPost';
 
 function PopupPost({ post, onUpdatePost, onEdit }) {
   const popupOpenPost = useSelector(state => state.popupOpenPost.isPopupOpenPost);
@@ -33,7 +34,7 @@ function PopupPost({ post, onUpdatePost, onEdit }) {
   };
 
   const handleClosePopup = () => {
-    dispatch({ type: 'IS_CLOSED', payload: {} });
+    dispatch(isPopupOpenPostClosedAction());
   };
 
   return (

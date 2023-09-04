@@ -6,6 +6,7 @@ import { useMemo, useState, useEffect } from 'react';
 import Filter from '../filter/Filter';
 import PopupPost from '../popupPost/PopupPost';
 import { useDispatch, useSelector } from 'react-redux';
+import { addPostAction, removePostAction, renderPostsAction } from '../../store/posts';
 
 function App() {
   const posts = useSelector(state => state.posts.posts);
@@ -14,6 +15,14 @@ function App() {
   const [filter, setFilter] = useState({ sort: '', query: '' });
   const [selectedPost, setSelectedPost] = useState({});
   const [shouldUpdatePosts, setShouldUpdatePosts] = useState(false);
+
+  useEffect(() => {
+    const localPosts = localStorage.getItem('userPosts');
+
+    if (localPosts) {
+      dispatch(renderPostsAction(JSON.parse(localPosts)));
+    }
+  }, [dispatch]);
 
   /*//сотрировка постов
   const sortedPosts = useMemo(() => {
@@ -39,12 +48,18 @@ function App() {
 
   //добавление нового поста
   function createPost(newPost) {
-    dispatch({ type: 'ADD_POST', payload: newPost });
+    dispatch(addPostAction(newPost));
+
+    const updatedPosts = [...posts, newPost];
+    localStorage.setItem('userPosts', JSON.stringify(updatedPosts));
   }
 
   //функция удаления поста
   function removePost(card) {
-    dispatch({ type: 'REMOVE_POST', payload: card });
+    dispatch(removePostAction(card));
+
+    const updatedPosts = posts.filter(post => post.id !== card.id);
+    localStorage.setItem('userPosts', JSON.stringify(updatedPosts));
   }
 
   //функция редактирования поста

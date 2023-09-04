@@ -1,12 +1,13 @@
 import './add-card.css';
 import { useSelector, useDispatch } from 'react-redux';
+import { isPopupAddOpenAction } from '../../store/popupReduser';
 
 function AddCard() {
   const popup = useSelector(state => state.popupAddPost.isPopupAddPostOpen);
   const dispatch = useDispatch();
 
   const handlePopupOpen = () => {
-    dispatch({ type: 'IS_POPUP_OPEN', payload: {} });
+    dispatch(isPopupAddOpenAction());
   };
 
   return (
