@@ -1,11 +1,15 @@
 import './popup.css';
 import { useState } from 'react';
+import { useDispatch, useSelector } from 'react-redux';
 
-function Popup({ state, closePopup, createPost }) {
+function Popup({ createPost }) {
+  const popup = useSelector(state => state.popupAddPost.isPopupAddPostOpen);
+  const dispatch = useDispatch();
+
   const [inputName, setInputName] = useState('');
   const [inputText, setInputText] = useState('');
 
-  function addNewPost(evt) {
+  const addNewPost = evt => {
     evt.preventDefault();
 
     const date = new Date().toLocaleDateString();
@@ -21,14 +25,17 @@ function Popup({ state, closePopup, createPost }) {
       createPost(newPost);
       setInputName('');
       setInputText('');
-      closePopup();
     }
-  }
+  };
+
+  const handlePopupClose = () => {
+    dispatch({ type: 'IS_CLOSED', payload: {} });
+  };
 
   return (
-    <div className={`popup ${state ? 'popup_opened' : ''}`}>
+    <div className={`popup ${popup ? 'popup_opened' : ''}`}>
       <div className="popup__container">
-        <button className="popup__button-delete" onClick={closePopup}></button>
+        <button className="popup__button-delete" onClick={() => handlePopupClose()}></button>
         <form className="popup__form">
           <h2 className="popup__title">Добавить новую запись</h2>
           <input

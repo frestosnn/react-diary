@@ -3,7 +3,7 @@ import SortPosts from '../sort-posts/SortPosts';
 import './filter.css';
 import AddCard from '../add-card/add-card';
 
-function Filter({ filter, setFilter, handlePopupOpen }) {
+function Filter({ filter, setFilter }) {
   return (
     <section className="filter">
       <div className="filter__container">
@@ -24,7 +24,7 @@ function Filter({ filter, setFilter, handlePopupOpen }) {
           onChange={e => setFilter({ ...filter, query: e.target.value })}
         ></input>
       </div>
-      <AddCard handlePopupOpen={handlePopupOpen} />
+      <AddCard />
     </section>
   );
 }

@@ -1,10 +1,16 @@
+import { useDispatch } from 'react-redux';
 import './card.css';
+import { useSelector } from 'react-redux';
 
-function Card({ card, removePost, handlePopupPostOpen, onButtonClick }) {
+function Card({ card, removePost, onButtonClick }) {
+  const popupOpenPost = useSelector(state => state.popupOpenPost.isPopupOpenPost);
+
+  const dispatch = useDispatch();
+
   const date = card.createdAt;
 
   const setPostInfo = () => {
-    handlePopupPostOpen();
+    dispatch({ type: 'IS_OPEN', payload: {} });
     onButtonClick(card);
   };
 

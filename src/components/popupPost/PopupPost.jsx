@@ -1,7 +1,11 @@
 import React, { useState, useEffect } from 'react';
 import './popupPost.css';
+import { useDispatch, useSelector } from 'react-redux';
 
-function PopupPost({ state, post, closePopup, onUpdatePost, onEdit }) {
+function PopupPost({ post, onUpdatePost, onEdit }) {
+  const popupOpenPost = useSelector(state => state.popupOpenPost.isPopupOpenPost);
+  const dispatch = useDispatch();
+
   const [isEditing, setEditing] = useState(false);
 
   const [editedPost, setEditedPost] = useState({ ...post });
@@ -28,10 +32,14 @@ function PopupPost({ state, post, closePopup, onUpdatePost, onEdit }) {
     onEdit(true);
   };
 
+  const handleClosePopup = () => {
+    dispatch({ type: 'IS_CLOSED', payload: {} });
+  };
+
   return (
-    <div className={`popup ${state ? 'popup_opened' : ''}`}>
+    <div className={`popup ${popupOpenPost ? 'popup_opened' : ''}`}>
       <div className="popup__container popup__container_size_big">
-        <button className="popup__button-delete" onClick={closePopup}></button>
+        <button className="popup__button-delete" onClick={() => handleClosePopup()}></button>
 
         {isEditing ? (
           <div className="popup_post">
