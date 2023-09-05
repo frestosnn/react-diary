@@ -2,41 +2,44 @@ import React, { useState, useEffect } from 'react';
 import './popupPost.css';
 import { useDispatch, useSelector } from 'react-redux';
 import { isPopupOpenPostClosedAction } from '../../store/popupOpenPost';
+import {
+  changePostNameAction,
+  changePostTextAction,
+  setPostAction
+} from '../../store/editPostReducer';
 
-function PopupPost({ post, onUpdatePost, onEdit }) {
+function PopupPost({ onUpdatePost }) {
   const popupOpenPost = useSelector(state => state.popupOpenPost.isPopupOpenPost);
+  const selectedPost = useSelector(state => state.selectedPost.selectedPost);
+  const editedPost = useSelector(state => state.editedPost.editedPost);
+
   const dispatch = useDispatch();
 
   const [isEditing, setEditing] = useState(false);
 
-  const [editedPost, setEditedPost] = useState({ ...post });
-
-  // Инициализируем editedPost только при первом открытии режима редактирования
   useEffect(() => {
     if (isEditing) {
-      setEditedPost({ ...post });
+      dispatch(setPostAction(selectedPost));
     }
-  }, [isEditing, post]);
-
-  const handleEditClick = () => {
-    setEditing(true);
-  };
+  }, [isEditing, selectedPost]);
 
   const handleSubmit = e => {
     e.preventDefault();
-
-    // Обновляем post с новыми данными из editedPost
-    const updatedPost = { ...post, title: editedPost.title, text: editedPost.text };
-    onUpdatePost(updatedPost); // Вызываем функцию onUpdatePost для обновления post
-
+    onUpdatePost(editedPost); // Вызываем функцию onUpdatePost для обновления post
     setEditing(false);
-    onEdit(true);
   };
 
   const handleClosePopup = () => {
     dispatch(isPopupOpenPostClosedAction());
   };
 
+  const handleChangeName = e => {
+    dispatch(changePostNameAction(e.target.value));
+  };
+
+  const handleChangeText = e => {
+    dispatch(changePostTextAction(e.target.value));
+  };
   return (
     <div className={`popup ${popupOpenPost ? 'popup_opened' : ''}`}>
       <div className="popup__container popup__container_size_big">
@@ -49,12 +52,12 @@ function PopupPost({ post, onUpdatePost, onEdit }) {
               <input
                 className="popup__input popup__input_type_title"
                 value={editedPost.title || ''}
-                onChange={e => setEditedPost({ ...editedPost, title: e.target.value })}
+                onChange={handleChangeName}
               ></input>
               <textarea
                 className="popup__input"
                 value={editedPost.text || ''}
-                onChange={e => setEditedPost({ ...editedPost, text: e.target.value })}
+                onChange={handleChangeText}
               ></textarea>
               <button className="popup__button-save" onClick={handleSubmit}>
                 Сохранить
@@ -63,10 +66,10 @@ function PopupPost({ post, onUpdatePost, onEdit }) {
           </div>
         ) : (
           <>
-            <h1 className="popup__title popup__title_size_big">{post.title}</h1>
-            <p className="popup__text">{post.text}</p>
-            <span className="popup__date">{post.createdAt}</span>
-            <button className="popup__edit" onClick={handleEditClick}>
+            <h1 className="popup__title popup__title_size_big">{editedPost.title}</h1>
+            <p className="popup__text">{editedPost.text}</p>
+            <span className="popup__date">{editedPost.createdAt}</span>
+            <button className="popup__edit" onClick={() => setEditing(true)}>
               Редактировать пост
             </button>
           </>

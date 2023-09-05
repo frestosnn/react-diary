@@ -7,6 +7,8 @@ import storage from 'redux-persist/lib/storage'; // Выберите место 
 import popupAddPostReduser from './popupReduser';
 import popupOpenPostReduser from './popupOpenPost';
 import postsReducer from './posts';
+import selectedPostReducer from './selectedPosrReducer';
+import editPostReducer from './editPostReducer';
 
 const persistConfig = {
   key: 'root', // Ключ для сохранения данных
@@ -16,7 +18,9 @@ const persistConfig = {
 const rootReducer = combineReducers({
   popupAddPost: popupAddPostReduser,
   popupOpenPost: popupOpenPostReduser,
-  posts: postsReducer
+  posts: postsReducer,
+  selectedPost: selectedPostReducer,
+  editedPost: editPostReducer
 });
 
 const persistedReducer = persistReducer(persistConfig, rootReducer);

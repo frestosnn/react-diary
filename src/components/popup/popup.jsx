@@ -1,14 +1,19 @@
 import './popup.css';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { isPopupAddClosedAction } from '../../store/popupReduser';
 
 function Popup({ createPost }) {
-  const popup = useSelector(state => state.popupAddPost.isPopupAddPostOpen);
+  const popupAddPost = useSelector(state => state.popupAddPost.isPopupAddPostOpen);
   const dispatch = useDispatch();
 
   const [inputName, setInputName] = useState('');
   const [inputText, setInputText] = useState('');
+
+  useEffect(() => {
+    setInputName('');
+    setInputText('');
+  }, [popupAddPost]);
 
   const addNewPost = evt => {
     evt.preventDefault();
@@ -24,8 +29,6 @@ function Popup({ createPost }) {
 
     if (inputName && inputText) {
       createPost(newPost);
-      setInputName('');
-      setInputText('');
       handlePopupClose();
     }
   };
@@ -35,7 +38,7 @@ function Popup({ createPost }) {
   };
 
   return (
-    <div className={`popup ${popup ? 'popup_opened' : ''}`}>
+    <div className={`popup ${popupAddPost ? 'popup_opened' : ''}`}>
       <div className="popup__container">
         <button className="popup__button-delete" onClick={() => handlePopupClose()}></button>
         <form className="popup__form">

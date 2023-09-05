@@ -6,23 +6,27 @@ import { useMemo, useState, useEffect } from 'react';
 import Filter from '../filter/Filter';
 import PopupPost from '../popupPost/PopupPost';
 import { useDispatch, useSelector } from 'react-redux';
-import { addPostAction, removePostAction, renderPostsAction } from '../../store/posts';
+import {
+  addPostAction,
+  removePostAction,
+  renderPostsAction,
+  updatePostAction
+} from '../../store/posts';
 
 function App() {
   const posts = useSelector(state => state.posts.posts);
   const dispatch = useDispatch();
 
   const [filter, setFilter] = useState({ sort: '', query: '' });
-  const [selectedPost, setSelectedPost] = useState({});
-  const [shouldUpdatePosts, setShouldUpdatePosts] = useState(false);
 
   useEffect(() => {
+    //получаем данные из хранилища
     const localPosts = localStorage.getItem('userPosts');
 
     if (localPosts) {
-      dispatch(renderPostsAction(JSON.parse(localPosts)));
+      dispatch(renderPostsAction(Array.from(JSON.parse(localPosts))));
     }
-  }, [dispatch]);
+  }, []);
 
   /*//сотрировка постов
   const sortedPosts = useMemo(() => {
@@ -63,30 +67,26 @@ function App() {
   }
 
   //функция редактирования поста
-  function updatePost(updatedPost) {
-    const updatedPosts = posts.map(post => {
-      if (post && post.id === updatedPost.id) {
-        return updatedPost; // обновляем существующий пост
-      }
-      return post; // остальные посты оставляем без изменений
-    });
+  function updatePost(post) {
+    dispatch(updatePostAction(post));
 
-    setSelectedPost(updatedPost);
+    // Сохраняем обновленный пост в localStorage
+    const updatedPosts = JSON.parse(localStorage.getItem('userPosts'));
+    const updatedIndex = updatedPosts.findIndex(p => p.id === post.id);
+
+    if (updatedIndex !== -1) {
+      updatedPosts[updatedIndex] = post;
+      localStorage.setItem('userPosts', JSON.stringify(updatedPosts));
+    }
   }
 
   return (
     <>
       <Header />
       <Filter filter={filter} setFilter={setFilter} />
-      <Posts removePost={removePost} onButtonClick={setSelectedPost} />
-
+      <Posts removePost={removePost} />
       <Popup createPost={createPost}></Popup>
-
-      <PopupPost
-        post={selectedPost}
-        onUpdatePost={updatePost}
-        onEdit={setShouldUpdatePosts}
-      ></PopupPost>
+      <PopupPost onUpdatePost={updatePost}></PopupPost>
     </>
   );
 }

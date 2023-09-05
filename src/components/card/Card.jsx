@@ -2,17 +2,17 @@ import { useDispatch } from 'react-redux';
 import './card.css';
 import { useSelector } from 'react-redux';
 import { isPopupOpenPostOpenAction } from '../../store/popupOpenPost';
+import { selectPostAction } from '../../store/selectedPosrReducer';
 
-function Card({ card, removePost, onButtonClick }) {
+function Card({ card, removePost }) {
   const popupOpenPost = useSelector(state => state.popupOpenPost.isPopupOpenPost);
-
   const dispatch = useDispatch();
 
   const date = card.createdAt;
 
   const setPostInfo = () => {
     dispatch(isPopupOpenPostOpenAction());
-    onButtonClick(card);
+    dispatch(selectPostAction(card));
   };
 
   return (
